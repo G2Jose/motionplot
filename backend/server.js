@@ -2,7 +2,6 @@ const express = require('express');
 const Rx = require('rxjs');
 const { sse } = require('./sse');
 
-const data = [];
 const connections = [];
 const app = express();
 app.use(express.json());
@@ -17,15 +16,10 @@ app.use((req, res, next) => {
 });
 
 const datain$ = Rx.Observable.create(observer => {
-	console.log('here');
 	app.post('/data', (req, res) => {
 		observer.next(req.body);
 		res.status(204).send();
 	});
-});
-
-app.get('/data', (req, res) => {
-	res.json(data);
 });
 
 app.get('/stream', function(req, res) {
@@ -35,7 +29,6 @@ app.get('/stream', function(req, res) {
 
 datain$.subscribe(x => {
 	connections.forEach(connection => connection.sseSend(x));
-	data.push(x);
 });
 
 app.listen(3000, () => console.info('running on port 3000'));

@@ -18,9 +18,9 @@ class App extends Component {
         if (!this.plot)
           this.plot = document.getElementsByClassName('js-plotly-plot')[0];
         const extension = {
-          x: [[data.accel.x * 10]],
-          y: [[data.accel.y * 10]],
-          z: [[data.accel.z * 10]],
+          x: [data.accel.map(item => item.x)],
+          y: [data.accel.map(item => item.y)],
+          z: [data.accel.map(item => item.z)],
         };
         Plotly.extendTraces(this.plot, extension, [0]);
       }
